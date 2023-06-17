@@ -1,0 +1,195 @@
+
+<style>
+    {
+
+.button-style {
+  align-items: center;
+  background-image: linear-gradient(144deg,#AF40FF, #5B42F3 50%,#00DDEB);
+  border: 0;
+  border-radius: 8px;
+  box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  display: flex;
+  font-family: Phantomsans, sans-serif;
+  font-size: 20px;
+  justify-content: center;
+  line-height: 1em;
+  max-width: 100%;
+  min-width: 30px;
+  padding: 9px;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.button-style:active,
+.button-style:hover {
+  outline: 0;
+}
+    }
+</style>
+    @{
+    var rowCount = 3; // Initial number of rows
+    var columnCount = 3; // Initial number of columns
+}
+    <table id="myTable" class="table table-hover table-striped table-bordered table-sm" style="margin-top: 5%;width: auto;
+  background-image: linear-gradient(144deg,hsl(275, 61%, 86%), #bab2ee 50%,#99dfe4);color: #212529;">
+        <thead class="thead-light">
+            <tr class="">
+                @for (int j = 0; j < columnCount; j++)
+                {
+                    <td style="max-width: 50px;"><input class="form-control border-Top-0 " style="background-color: rgb(199, 222, 238);border: 0px;" /></td>
+                }
+            </tr>
+        </thead>
+        @for (int i = 0; i < rowCount; i++)
+        {
+            <tr>
+                @for (int j = 0; j < columnCount; j++)
+                {
+                    <td><input type="number" class="form-control border-Top-0 input-cell" style="background-color: transparent;border: 0px;"/></td>
+                }
+            </tr>
+        }
+        <tr id="footerRow" class="footer-row">
+            @for (int j = 0; j < columnCount; j++)
+            {
+                <td>0</td>
+            }
+        </tr>
+    </table>
+    <div style="display: flex;">
+    <button class="button-style" style="margin-right: 10px;
+  align-items: center;
+  background-image: linear-gradient(144deg,#AF40FF, #5B42F3 50%,#00DDEB);
+  border: 0;
+  border-radius: 18px;
+  box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  display: flex;
+  font-family: Phantomsans, sans-serif;
+  font-size: 20px;
+  justify-content: center;
+  line-height: 1em;
+  max-width: 100%;
+  min-width: 30px;
+  padding: 9px 19px 9px 19px;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+  cursor: pointer;" onclick="addRow()">Yeni Tur</button>
+    <button class="button-style" style="
+  align-items: center;
+  background-image: linear-gradient(144deg,#AF40FF, #5B42F3 50%,#00DDEB);
+  border: 0;
+  border-radius: 18px;
+  box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  display: flex;
+  font-family: Phantomsans, sans-serif;
+  font-size: 20px;
+  justify-content: center;
+  line-height: 1em;
+  max-width: 100%;
+  min-width: 30px;
+  padding: 9px 19px 9px 19px;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+  cursor: pointer;" onclick="addColumn()">Yeni Oyuncu</button>
+</div>
+        <script>
+        function addRow() {
+            var table = document.getElementById("myTable");
+            var row = table.insertRow(table.rows.length - 1); // Insert a new row at the end
+
+            // Add cells to the new row
+            for (var i = 0; i < table.rows[0].cells.length; i++) {
+                var cell = row.insertCell(i);
+                cell.innerHTML = '<input type="number" class="form-control border-Top-0 input-cell" style="background-color: transparent;border: 0px;"/>';
+                    cell.addEventListener("input", calculateColumnSums);
+            }
+        }
+        function calculateColumnSums() {
+            var table = document.getElementById("myTable");
+            var inputCells = table.getElementsByClassName("input-cell");
+            var footerRow = table.getElementsByClassName("footer-row")[0];
+            var columnSums = Array.from(inputCells).reduce(function (acc, inputCell) {
+                var columnIndex = inputCell.parentElement.cellIndex;
+                var inputValue = parseFloat(inputCell.value) || 0;
+                acc[columnIndex] = (acc[columnIndex] || 0) + inputValue;
+                return acc;
+            }, []);
+
+            // Update the footer cells with the column sums
+            for (var i = 0; i < footerRow.cells.length; i++) {
+                var footerCell = footerRow.cells[i];
+                footerCell.innerHTML = columnSums[i] || "";
+            }
+        }
+
+        // Call the function initially
+        calculateColumnSums();
+
+        // Attach the function to input change events
+        var inputCells = document.getElementsByClassName("input-cell");
+        Array.from(inputCells).forEach(function (inputCell) {
+            inputCell.addEventListener("input", calculateColumnSums);
+        });
+
+        function addColumn() {
+            var table = document.getElementById("myTable");
+
+            // Add cells to each existing row
+            for (var i = 0; i < table.rows.length; i++) {
+                if (i === 0) {
+                    var cell = table.rows[i].insertCell(-1); // Insert a new cell at the end
+                    cell.innerHTML = '<input class="form-control border-Top-0 " style="background-color: rgb(199, 222, 238);border: 0px;" />';
+                }
+                else if (i === table.rows.length - 1) {
+                    var cell = table.rows[i].insertCell(-1); // Insert a new cell at the end
+                    cell.innerHTML = '';
+                }
+                else {
+                    var cell = table.rows[i].insertCell(-1); // Insert a new cell at the end
+                    cell.innerHTML = '<input type="number" class="form-control border-Top-0 input-cell" style="background-color: transparent;border: 0px;"/>';
+                    cell.addEventListener("input", calculateColumnSums);
+                }
+            }
+        }
+        function calculateColumnSum() {
+            var table = document.getElementById("myTable");
+            var columnCount = table.rows[0].cells.length;
+            var sums = [];
+
+            for (var i = 0; i < columnCount; i++) {
+                var sum = 0;
+
+                for (var j = 1; j < table.rows.length - 1; j++) {
+                    var cellValue = parseInt(table.rows[j].cells[i].innerHTML);
+                    if (!isNaN(cellValue)) {
+                        sum += cellValue;
+                    }
+                }
+
+                sums.push(sum);
+            }
+
+            var footerRow = document.getElementById("footerRow");
+
+            for (var i = 0; i < columnCount; i++) {
+                footerRow.cells[i].innerHTML = sums[i];
+            }
+        }
+    </script>

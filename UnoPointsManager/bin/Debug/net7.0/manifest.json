@@ -1,0 +1,23 @@
+{
+    "name": "UnoPointsManager",
+    "short_name": "UnoManager",
+    "icons": [
+      {
+        "src": "movi-72.jpg",
+        "sizes": "72x72",
+        "type": "image/jpg"
+      },
+      {
+        "src": "movi-96.jpg",
+        "sizes": "96x96",
+        "type": "image/jpg"
+      },
+      {
+        "src": "movi-192.jpg",
+        "sizes": "192x192",
+        "type": "image/jpg"
+      }
+    ],
+    "start_url": "/",
+    "display": "standalone"
+  }
